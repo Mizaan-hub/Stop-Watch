@@ -1,33 +1,41 @@
-let secondsElapsed = 0;
-let interval = null;
-const time = document.getElementById("time")
+let [seconds, minutes, hours] = [0, 0, 0];
+let timmer = document.getElementById("timmer");
+let start = document.getElementById("start");
+let stop = document.getElementById("stop");
+let reset = document.getElementById("reset");
 
-function padStart(value){
-    return String(value).padStart(2, "0")
+
+let timer = null;
+
+function stopTimer() {
+    seconds++;
+    if (seconds == 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes == 60) {
+            minutes = 0;
+            hours++;
+        }
+    }
+    let h = hours < 10 ? "0" + hours : hours;
+    let m = minutes < 10 ? "0" + minutes : minutes;
+    let s = seconds < 10 ? "0" + seconds : seconds;
+    timmer.innerHTML = h + ":" + m + ":" + s;
 }
 
-function setTime(){
-    const minutes = Math.floor(secondsElapsed/60)
-    const seconds = secondsElapsed % 60
-    time.innerHTML = `${padStart(minutes)}:${padStart(seconds)}`
+function WatchStart() {
+    if (timer !== null) {
+        clearInterval(timer);
+    }
+    timer = setInterval(stopTimer, 1000);
 }
 
-function timer(){
-    secondsElapsed++
-    setTime()
+function WatchStop() {
+    clearInterval(timer);
 }
+function WatchReset() {
+    clearInterval(timer);
+    [seconds, minutes, hours] = [0, 0, 0];
+    timmer.innerHTML = "00:00:00";
 
-function startClock(){
-    if(interval) stopClock()
-        interval = setInterval(timer, 1000)
-}
-
-function stopClock(){
-    clearInterval(interval)
-}
-
-function resetClock(){
-    stopClock()
-    secondsElapsed = 0
-    setTime()
 }
